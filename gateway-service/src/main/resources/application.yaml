@@ -1,0 +1,15 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: excuse-service
+              uri: http://excuse-service:8081
+              predicates:
+                - Path=/api/excuses/**

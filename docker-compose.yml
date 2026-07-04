@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  excuse-service:
+    build: ./excuse-service
+    container_name: excuse-service
+    ports:
+      - "8081:8081"
+    networks:
+      - excuse-network
+
+  gateway-service:
+    build: ./gateway-service
+    container_name: gateway-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - excuse-service
+    networks:
+      - excuse-network
+
+  history-service:
+    build: ./history-service
+    container_name: history-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - rabbitmq
+    networks:
+      - excuse-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - excuse-network
+
+networks:
+  excuse-network:
+    driver: bridge
+
