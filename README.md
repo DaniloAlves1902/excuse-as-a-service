@@ -42,11 +42,23 @@ Since this is a modern application, we packaged all the complex infrastructure d
 4. Wait for all containers to be healthy. The RabbitMQ broker takes a few seconds to boot up.
 5. You are ready to start dodging responsibilities!
 
-### API Endpoints
-*(Assuming default ports, please check application.yml if different)*
+### Architecture Details & API Endpoints
 
-- **GET /excuses/random**: Returns a perfectly crafted random excuse.
-- **GET /history**: (History Service) Retrieves the audit trail of all excuses you have used so far.
+The ecosystem exposes the following services and endpoints:
+
+#### 1. API Gateway (Port 8082)
+The Gateway is the main entry point for external traffic, routing requests to the appropriate internal microservices.
+- **GET http://localhost:8082/api/excuses** -> Routes directly to the Excuse Service to fetch a random excuse.
+- **GET http://localhost:8082/api/excuses/category?name={category_name}** -> Routes to Excuse Service to fetch a random excuse from a specific category (e.g., ?name=work).
+
+#### 2. Excuse Service (Port 8081)
+Can be accessed directly or via the Gateway.
+- **GET http://localhost:8081/api/excuses**: Returns a perfectly crafted random excuse.
+- **GET http://localhost:8081/api/excuses/category?name={category_name}**: Returns an excuse by category.
+
+#### 3. History Service (Port 8083)
+Manages the audit trail. This service operates independently and can be accessed directly.
+- **GET http://localhost:8083/api/history**: Retrieves the audit trail of all excuses you have used so far.
 
 ---
 
@@ -88,8 +100,20 @@ Como esta é uma aplicação moderna, empacotamos toda a infraestrutura complexa
 4. Aguarde até que todos os containers estejam prontos. O RabbitMQ demora alguns segundos para iniciar.
 5. Você está pronto para começar a fugir das suas responsabilidades!
 
-### Endpoints da API
-*(Assumindo as portas padrão, verifique os arquivos application.yml se necessário)*
+### Detalhes da Arquitetura & Endpoints da API
 
-- **GET /excuses/random**: Retorna uma desculpa aleatória perfeitamente elaborada.
-- **GET /history**: (History Service) Retorna o histórico de todas as desculpas que você já usou.
+O ecossistema expõe os seguintes serviços e endpoints:
+
+#### 1. API Gateway (Porta 8082)
+O Gateway atua como o ponto de entrada principal para o tráfego externo, roteando as requisições para os microsserviços internos.
+- **GET http://localhost:8082/api/excuses** -> Roteia diretamente para o Excuse Service para buscar uma desculpa aleatória.
+- **GET http://localhost:8082/api/excuses/category?name={nome_da_categoria}** -> Roteia para o Excuse Service para buscar uma desculpa de uma categoria específica (ex: ?name=trabalho).
+
+#### 2. Excuse Service (Porta 8081)
+Pode ser acessado diretamente ou através do Gateway.
+- **GET http://localhost:8081/api/excuses**: Retorna uma desculpa aleatória perfeitamente elaborada.
+- **GET http://localhost:8081/api/excuses/category?name={nome_da_categoria}**: Retorna uma desculpa categorizada.
+
+#### 3. History Service (Porta 8083)
+Gerencia a trilha de auditoria. Na configuração atual, opera de forma independente e deve ser acessado diretamente.
+- **GET http://localhost:8083/api/history**: Retorna o histórico de todas as desculpas que você já usou.
